@@ -53,22 +53,61 @@ trobar una diferència de proporcions de **0.025** per tenir una probabilitat de
 
 Es fan els següents passos:
 
-1. Estimar paràmetres bàsics de RACE i RACEPLUS. Basant-nos en dades històriques, estimem:
+1. **PARAMETRES**. Estimar paràmetres bàsics de RACE i RACEPLUS. Basant-nos en dades històriques, estimem:
 
 - Probabilitat d'èxit per predir LVO per cada algoritme ($\hat{p}_{RACE} \approx 0.67$, $\hat{p}_{RACEPLUS} \approx 0.69$)
-- Correlació entre els encerts.
+- Correlació entre els encerts. ($\hat{\rho} \approx 0.58$)
+
+2. **A PRIORI**. S'estima una distribució a priori per la diferència de proporcions tenint fent servir l'aproximació Normal.
+
+```{r echo =FALSE}
+curve(dapriori(x, n = sum(tab_emp), p1 = p_correct_RACE, p2 = p_correct_RACEPLUS),-0.05,0.1, ylab='',main='A priori distribution')
+abline(v = p_correct_RACEPLUS-p_correct_RACE, col=3,lty=2, lwd=2)
+axis(1, at = p_correct_RACEPLUS-p_correct_RACE, labels = '0.02')
+```
+
+
+3. **SIMULACIÓ**. Es fa una simulació ($nsim=10000$) on es generen dades d'encerts/errades en 
+l'anàlisi intermedi tenint en compte diferents escenaris:
+
+**ESCENARIS:**
+
+Combinacions de:
+
+a. La diferència real en encerts entre RACEPLUS i RACE ($\Delta \in \{-0.01,-0.005,0,0.005,0.01,0.015,0.02,0.025,0.03\}$)
+b. La mida mostral considerada en l'interim analysis ($SS \in \{350  875 1155 1750\}$). Aquests valors es correponen a un 10%, 25%, 33% i 50% de la mida mostral total ($n = 3500$) 
+
+**OUTCOMES RECOLLITS:**
+
+a. P-valor de l'estadístic de McNemar per comparació de proporcions aparellades a l'interim i al final de l'estudi
+b. Diferència de proporció d'encerts a l'interim i al final de l'estudi
+c. Límit inferior de l'interval de confinça del 95% per la diferència de proporció d'encerts  a l'interim i al final de l'estudi
+
+
+4. **PROBABILITAT d'ÈXIT**. Es calcula la probabilitat d'èxit al final de l'estudi depenent de la mida mostral de l'interim i el punt de tall per la diferència de proporcions. L'èxit es defineix com poder demostrar al final de l'estudi que la proporció d'enerts del RACEPLUS és major que la del RACE.
+
+a. S'aplica la llei de probabilitat totals: $P(EXIT|cutpoint = c) = \sum_{i} \left[ P(EXIT|cutpoint = c \; \cap \; \Delta= \delta_i) · P(\Delta= \delta_i) \right]$
+b. La part $P(EXIT|cutpoint = c \; \cap \; \Delta= \delta_i)$ s'obté a partir de la simulació mirant la proporció d'èxits entre aquells casos on l'anàlisi intermedi es sobrepasa el punt de tall $c$ en la diferència de probabilitats.
+c. La part $P(\Delta= \delta_i)$ s'obté de la funció de densitat a priori estandaritzada.
+
+D'aquesta forma, per cada punt de tall $c$ i cada grandària mostral, podem tenir la probabilitat d'èxit.
+
+
+*Nota*: La llei de probabilitat totals estrictament s'hauria de aplicar en format continu.
+
 
 
 ## Resultats
 
-La següent figura 
+La següent figura mostra els resultats. principals.
 
 ![sample size](figure_ss.png)
 
-Per tenir una probabilitat d'almenys el 80% de demostrar la superioritat de RACEPLUS
-per sobre de RACE mecessitem fem un anaàlisi intermedi a la meitat de l'estudi 
-(n = 1750) i posar un punt de tall de 0.025 en la diferència de proporcions entre 
-ambdós mètodes predictius. En cas contrari, s'hauria de canviar d'algoritme.
+Per tenir una probabilitat d'almenys el 80% (linea puntejada horitzontal) de 
+demostrar la superioritat de RACEPLUS sobre RACE necessitem fem un anaàlisi intermedi 
+a la meitat de l'estudi (n = 1750) i posar un punt de tall de 0.025 (línea vertical) en 
+la diferència de proporcions entre ambdós mètodes predictius. En cas contrari, s'hauria de 
+canviar d'algoritme en aquest anàlis intermedi.
 
 
 ## Apendix I: Codi d'anàlisi
