@@ -99,7 +99,7 @@ D'aquesta forma, per cada punt de tall $c$ i cada grandària mostral, podem teni
 
 ## Resultats
 
-La següent figura mostra els resultats. principals.
+La següent figura mostra els resultats principals per quatre grandàries a l'interim (*ss_int*) diferents.
 
 ![sample size](figure_ss.png)
 
