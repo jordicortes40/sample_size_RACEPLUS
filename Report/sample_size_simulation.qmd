@@ -12,12 +12,6 @@ format:
     linestretch: 1.7
 ---
 
-```{css, echo = FALSE}
-.justify {
-  text-align: justify !important
-}
-```
-
 
 ```{r warning=FALSE, echo=FALSE, message=FALSE}
 library(knitr)
@@ -28,33 +22,31 @@ library(summarytools)
 library(randomForest)
 knitr::opts_chunk$set(echo=FALSE)
 options(knitr.kable.NA = '')
-load('Rdata/sample_size_simulation.Rdata')
+load('Rdata/sample_size_simulation.RData')
 ```
 
 
-## Resum exceutiu
+## Resum executiu
 
-::: {.justify}
+S'ha de fer un anàlisi intermedi a la meitat de l'estudi (**n = 1750**) i s'ha de 
+trobar una diferència de proporcions de **0.025** per tenir una probabilitat del 
+**80%** de detectar diferències entre els dos algoritmes al final de l'estudi.
 
-S'ha de fer un anàlisi intermedi a la meitat de l'estudi (n = 1750) i s'ha de 
-trobar una diferència de proporcions de 0.025 per tenir una probabilitat del 80% 
-de detectar diferències entre els dos algoritmes al final de l'estudi.
-
-:::
 
 ## Raonament
 
 1.	Es vol fer un anàlisi intermedi per avaluar si l’algoritme del RACEPLUS està funcionant millor que l’escala RACE respecte a la variable principal que és predir els ictus amb LVO.
-a.	No és una anàlisi intermedi ni d’eficàcia ni de futilitat ja que no s’aturarà l’estudi en cap cas.
-b.	La única decisió que es prendrà serà si continuar amb l’algoritme actual del RACEPLUS o canviar a algun altre variant de l’algoritme inicial (p.ex. atorgant pesos als individus) 
+
+  a.	No és una anàlisi intermedi ni d’eficàcia ni de futilitat ja que no s’aturarà l’estudi en cap cas.
+  b.	La única decisió que es prendrà serà si continuar amb l’algoritme actual del RACEPLUS o canviar a algun altre variant de l’algoritme inicial (p.ex. atorgant pesos als individus) 
 
 2.	Com que no s’aturarà l’estudi, el càlcul de la mida mostral no s’ha de fer en base a corregir els errors de tipus I o de tipus II sinó en base a tenir un criteri per concloure si val la pena canviar d’algoritme o no. Es pot fer de diverses maneres:
 
-a.	Enfoc freqüentista. Fent una comparació de proporció aparellada (McNemar test) i demanant que la proporció d’encerts del RACEPLUS per LVO sigui almenys XXX% superior als encerts amb l’escala RACE. Com que sabem la distribució de l’estadístic, podríem fer el càlcul de la mida mostral. Inconvenient: El càlcul total de la mida mostral està pensat per demostrar superioritat assumint que el XXX% de diferència en els encerts és molt baix i, per tant, no tindrem potència per demostrar-ho.
+  a.	**Enfoc freqüentista**. Fent una comparació de proporció aparellada (McNemar test) i demanant que la proporció d’encerts del RACEPLUS per LVO sigui almenys XXX% superior als encerts amb l’escala RACE. Com que sabem la distribució de l’estadístic, podríem fer el càlcul de la mida mostral. Inconvenient: El càlcul total de la mida mostral està pensat per demostrar superioritat assumint que el XXX% de diferència en els encerts és molt baix i, per tant, no tindrem potència per demostrar-ho.
 
-b.	Enfoc Bayesià. Estimar la distribució a posteriori de la diferència de proporcions aparellada emprant l’aproximació per la Normal de la diferència de proporcions d’encerts. El càlcul de la mida mostral es faria en base a demostrar que la probabilitat de que RACEPLUS encerti més que RACE és major al 50%. Inconvenient: Manca d’experiència en aquest anàlisi i que s’ha d’assumir coneguda la mitjana o la variància. Nota: No es pot estimar les distribucions a posteriori de les dues probabilitats d’encert (amb RACE i RACEPLUS) ja que no són mostres independents. Seria més fàcil fer-ho així emprant Beta com a priori i Betabinomial com a posteriori.
+  b.	**Enfoc Bayesià**. Estimar la distribució a posteriori de la diferència de proporcions aparellada emprant l’aproximació per la Normal de la diferència de proporcions d’encerts. El càlcul de la mida mostral es faria en base a demostrar que la probabilitat de que RACEPLUS encerti més que RACE és major al 50%. Inconvenient: Manca d’experiència en aquest anàlisi i que s’ha d’assumir coneguda la mitjana o la variància. Nota: No es pot estimar les distribucions a posteriori de les dues probabilitats d’encert (amb RACE i RACEPLUS) ja que no són mostres independents. Seria més fàcil fer-ho així emprant Beta com a priori i Betabinomial com a posteriori.
 
-c.	Enfoc per simulació/Bayesià. Extrapolar quina és la probabilitat de que al final. Calcular per simulació les diferències observades a l’intermedi amb diferents grandàries mostrals i en que desencadenen al final per diferents mides mostrals. Incovenient: cost computacional i s’ha d’assumir una correlació entre les mesures (aquest darrer inconvenient és comú a tots.
+  c.	**Enfoc per simulació/Bayesià**. Extrapolar quina és la probabilitat de que al final. Calcular per simulació les diferències observades a l’intermedi amb diferents grandàries mostrals i en que desencadenen al final per diferents mides mostrals. Incovenient: cost computacional i s’ha d’assumir una correlació entre les mesures (aquest darrer inconvenient és comú a tots.
 
 
 ## Mètodes
@@ -69,15 +61,18 @@ Es fan els següents passos:
 
 ## Resultats
 
-![sample size](figures/figure_ss.png)
+La següent figura 
+
+![sample size](figure_ss.png)
 
 Per tenir una probabilitat d'almenys el 80% de demostrar la superioritat de RACEPLUS
 per sobre de RACE mecessitem fem un anaàlisi intermedi a la meitat de l'estudi 
 (n = 1750) i posar un punt de tall de 0.025 en la diferència de proporcions entre 
 ambdós mètodes predictius. En cas contrari, s'hauria de canviar d'algoritme.
 
+
 ## Apendix I: Codi d'anàlisi
 
-El codi d'anàlisi es troba aquí:
+El codi d'anàlisi es troba [aquí](https://github.com/jordicortes40/sample_size_RACEPLUS).
 
 
